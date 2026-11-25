@@ -1,0 +1,12 @@
+{
+    "dart.flutterSdkPath":  "C:/x_programs/avto-toolchain/flutter",
+    "dart.lineLength":  100,
+    "[dart]":  {
+                   "editor.formatOnSave":  true,
+                   "editor.defaultFormatter":  "Dart-Code.dart-code"
+               },
+    "files.watcherExclude":  {
+                                 "**/build/**":  true,
+                                 "**/.dart_tool/**":  true
+                             }
+}
