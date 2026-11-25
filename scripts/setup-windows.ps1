@@ -79,7 +79,7 @@ foreach ($package in $manifest.android_packages) {
     }
 }
 
-& $script:AvtoFlutter config --android-sdk $androidRoot --jdk-dir $env:JAVA_HOME --no-enable-windows-desktop
+& $script:AvtoFlutter config --android-sdk $androidRoot --jdk-dir $env:JAVA_HOME --no-enable-windows-desktop --no-enable-web
 if ($LASTEXITCODE -ne 0) { throw 'Flutter konfiguratsiyasi saqlanmadi.' }
 if (Get-Command code -ErrorAction SilentlyContinue) { code --install-extension Dart-Code.flutter }
 $vscodeSettingsPath = Join-Path $appRoot '.vscode\settings.json'

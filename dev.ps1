@@ -1,9 +1,8 @@
 param(
-    [ValidateSet('web','android','apk','doctor','devices','emulator','get','check','backend')]
-    [string]$Action = 'web',
+    [ValidateSet('android','apk','doctor','devices','emulator','get','check','backend')]
+    [string]$Action = 'android',
     [string]$Device = '',
-    [string]$ApiBaseUrl = 'https://platform.buxoroavto.uz/api/v1',
-    [int]$Port = 8085
+    [string]$ApiBaseUrl = 'https://platform.buxoroavto.uz/api/v1'
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'scripts\env.ps1')
@@ -19,10 +18,9 @@ try {
             if ($LASTEXITCODE -ne 0) { throw 'Flutter analyze xato bilan tugadi.' }
             & $script:AvtoFlutter test
         }
-        'web' { & $script:AvtoFlutter run -d chrome --web-hostname 127.0.0.1 --web-port $Port $apiDefine }
         'android' {
-            $flutterArguments = @('run', $apiDefine)
-            if ($Device) { $flutterArguments += @('-d', $Device) }
+            $androidDevice = if ($Device) { $Device } else { 'emulator-5554' }
+            $flutterArguments = @('run', '-d', $androidDevice, $apiDefine)
             & $script:AvtoFlutter @flutterArguments
         }
         'apk' { & $script:AvtoFlutter build apk --debug $apiDefine }

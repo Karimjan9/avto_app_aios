@@ -2,14 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Avto: Chrome + server backend",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "deviceId": "chrome",
-      "toolArgs": ["--dart-define-from-file=config/production.json", "--web-port=8085", "--web-hostname=127.0.0.1"]
-    },
-    {
       "name": "Avto: Android + server backend",
       "request": "launch",
       "type": "dart",
@@ -18,12 +10,19 @@
       "toolArgs": ["--dart-define-from-file=config/production.json"]
     },
     {
-      "name": "Avto: Chrome + local backend",
+      "name": "Avto: Android + local backend",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
-      "deviceId": "chrome",
-      "toolArgs": ["--dart-define-from-file=config/local-web.json", "--web-port=8085", "--web-hostname=127.0.0.1"]
+      "deviceId": "emulator-5554",
+      "toolArgs": ["--dart-define-from-file=config/local-android.json"]
+    },
+    {
+      "name": "Avto: iOS + server backend (macOS)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define-from-file=config/production.json"]
     }
   ]
 }

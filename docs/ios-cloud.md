@@ -1,27 +1,36 @@
-# Windows'dan iOS'ni bulutda tekshirish
+# iOS ilovasini yig'ish va tekshirish
 
-Kod Windows'da VS Code va Flutter orqali yoziladi. iOS ilovasini yig'ish bulutdagi macOS mashinasida bajariladi. `codemagic.yaml` aynan Flutter **3.50.1** versiyasini ishlatadi.
+`ios/` — umumiy Flutter kodidan haqiqiy iOS ilovasi yig'iladigan platforma loyihasi. Ilova Flutter ekranlarini ishlatadi va Laravel backendga JSON API orqali ulanadi.
 
-## Codemagic
+Kod Windows'da VS Code orqali yoziladi. iOS'ni yig'ish va simulatorni ishlatish uchun macOS va Xcode kerak; Windows'dagi VS Code kengaytmasi bu muhitni almashtirmaydi.
 
-1. Ushbu `app` loyihasini Git repozitoriysi ildizi sifatida joylashtiring. `codemagic.yaml` uning ildizida bo'lishi kerak. Butun `Avto` papkasini monorepo sifatida joylashtirsangiz, workflow'ning ish katalogi va konfiguratsiya yo'lini shunga moslang.
-2. Codemagic hisobida o'sha repozitoriyni ulang.
-3. YAML workflow sifatida `ios-simulator` ni tanlang.
-4. Workflow paketlarni oladi, `flutter analyze` va `flutter test` ni bajaradi, so'ng iOS simulator uchun unsigned ilovani yig'adi.
-5. Natijalar `build/ios/iphonesimulator/Runner.app` va `Runner-simulator.zip` bo'ladi.
+## Mac mavjud bo'lsa
 
-Bu simulator build uchun Apple signing sertifikati yoki App Store Connect kaliti kerak emas. `.app` yoki ZIP faylni haqiqiy iPhone'ga to'g'ridan-to'g'ri o'rnatib bo'lmaydi. Haqiqiy iPhone/TestFlight tarqatishiga alohida signed build va tegishli Apple hisob sozlamalari kerak bo'ladi.
+Mac'da Flutter **3.50.1**, Xcode va Flutter iOS sozlamalarini tayyorlang. `app` loyihasi ildizidan:
 
-## Windows brauzerida interaktiv sinov
+```bash
+flutter pub get
+flutter doctor -v
+open -a Simulator
+flutter devices
+flutter run --dart-define-from-file=config/production.json
+```
 
-Codemagic App Preview mos `.app` artifact yonida **Quick Launch** tugmasini beradi. U orqali Windows'dagi Chrome ichida bulut iOS simulatorini boshqarish mumkin. Joriy xizmatda App Preview jamoa akkauntlari va tegishli pullik rejaga bog'liq; sinov daqiqalari tugagach foydalanish pullik bo'ladi. Oddiy CI build va interaktiv preview alohida imkoniyatlardir.
+Bir nechta qurilma bo'lsa, `flutter run` ga `-d <device-id>` qo'shing. Mac'da `.vscode/settings.json` ichidagi `dart.flutterSdkPath` ni o'sha kompyuterdagi Flutter SDK manziliga moslang. VS Code'da iOS simulatorini qurilma sifatida va `Avto: iOS + server backend (macOS)` konfiguratsiyasini tanlab `F5` bosing.
 
-Muqobil yo'l: `Runner-simulator.zip` ni Appetize'ga yuklash. Unga simulator `.app` arxivi kerak; App Store uchun `.ipa` mos kelmaydi. Yuklashdan oldin xizmat qo'llaydigan simulator arxitekturasini tekshiring.
+## Windows uchun bulutdagi macOS build
 
-Kod o'zgargach, yangi build tayyorlanadi. Bu Windows'da mahalliy iOS simulatori yoki doimiy hot reload o'rnini to'liq bosmaydi. Yakuniy relizni haqiqiy iPhone'da ham tekshiring.
+Repozitoriy ildizidagi `codemagic.yaml` Flutter **3.50.1** uchun tayyorlangan.
 
-## Ushbu workspace holati
+1. Codemagic akkauntini oching va `app` repozitoriysini ulang. `codemagic.yaml` repozitoriy ildizida bo'lishi kerak.
+2. `ios-simulator` YAML workflow'ini tanlang.
+3. Workflow paketlarni oladi, `flutter analyze` va `flutter test` ni bajaradi, so'ng iOS simulator uchun unsigned ilovani yig'adi.
+4. Natijalar `build/ios/iphonesimulator/Runner.app` va `Runner-simulator.zip` bo'ladi.
 
-Cloud konfiguratsiyasi lokal tayyorlangan. Codemagic/Appetize akkaunti ulanmagan bo'lsa, bulut build va interaktiv iOS sinovi bajarilgan hisoblanmaydi. Repozitoriyga maxfiy SSH yoki server `.env` fayllarini qo'shmang.
+Simulator build Apple signing sertifikatisiz yig'iladi. `.app` yoki ZIP faylni Windows'da yoki haqiqiy iPhone'da bevosita ishga tushirib bo'lmaydi; unga macOS iOS simulatori kerak. Haqiqiy iPhone/TestFlight tarqatishi uchun alohida signed build va Apple hisob sozlamalari zarur.
 
-Manbalar: [Codemagic App Preview](https://docs.codemagic.io/flutter-distributing/app-preview/), [iOS simulator build](https://docs.codemagic.io/yaml-code-signing/ios-simulator-builds/), [Appetize iOS](https://docs.appetize.io/platform/app-management/uploading-apps/ios), [Flutter iOS](https://docs.flutter.dev/platform-integration/ios/setup).
+## Hozirgi holat
+
+iOS loyiha va bulut konfiguratsiyasi tayyor. Mac va Codemagic akkaunti ulanmagani sabab haqiqiy iOS build hamda simulator sinovi hali bajarilmadi. Android sinovi iOS sinovi o'rnini bosmaydi. Repozitoriyga server `.env`, SSH yoki signing maxfiy kalitlarini qo'shmang.
+
+Manbalar: [Flutter iOS sozlash](https://docs.flutter.dev/platform-integration/ios/setup), [Codemagic iOS simulator build](https://docs.codemagic.io/yaml-code-signing/ios-simulator-builds/).

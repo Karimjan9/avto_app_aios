@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "App: Android run",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/dev.ps1", "android"],
+      "problemMatcher": [],
+      "presentation": { "panel": "dedicated" }
+    },
+    {
+      "label": "App: Android emulator",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/dev.ps1", "emulator"],
+      "problemMatcher": []
+    },
+    {
+      "label": "App: doctor",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/dev.ps1", "doctor"],
+      "problemMatcher": []
+    },
+    {
+      "label": "App: backend check",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/dev.ps1", "backend"],
+      "problemMatcher": []
+    }
+  ]
+}

@@ -203,7 +203,6 @@ class _ListingCard extends StatelessWidget {
               : Image.network(
                   listing.imageUrl!,
                   fit: BoxFit.cover,
-                  webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                   errorBuilder: (_, error, stack) => const _ImagePlaceholder(),
                 ),
         ),

@@ -1,8 +1,8 @@
 # Avto market — Flutter
 
-Android va iOS uchun bitta Flutter loyihasi. Umumiy kod `lib/`, platforma sozlamalari `android/` va `ios/` ichida. Oldingi bo'sh `aios/` papkasi Flutter talab qiladigan `ios/` nomiga almashtirildi. `web/` Windows'da tezkor preview uchun; asosiy marketplace web interfeysi `../platform` ichida qoladi.
+Android va iOS uchun bitta Flutter ilovasi. Umumiy Dart kodi `lib/`, platforma loyihalari `android/` va `ios/` ichida. Ilova Flutter ekranlarini ishlatadi; saytni WebView yoki havola orqali ochmaydi. Marketplace sayti alohida `../platform` loyihasida qoladi.
 
-Boshlang'ich ilova haqiqiy backenddan kategoriya va e'lonlarni o'qiydi. Kategoriya filtri, yangilash, bo'sh holat va ulanish xatosidan keyin qayta urinish mavjud. Bu to'liq marketplace mobil relizi emas; kirish, e'lon yaratish, chat va to'lov ekranlari keyingi ishlar.
+Boshlang'ich ilova umumiy Laravel backenddan JSON API orqali kategoriya va e'lonlarni oladi. Rasmlar ham serverdan yuklanadi. Kategoriya filtri, yangilash va qayta urinish mavjud. Kirish, e'lon yaratish, chat va to'lov ekranlari hali qo'shilmagan.
 
 ## Windows muhiti
 
@@ -12,27 +12,21 @@ Boshlang'ich ilova haqiqiy backenddan kategoriya va e'lonlarni o'qiydi. Kategori
 - VS Code: `Dart-Code.flutter`, `Dart-Code.dart-code`.
 - Vositalar katalogi: `C:\x_programs\avto-toolchain` (`AVTO_TOOLCHAIN_HOME` bilan boshqa katalog tanlanadi).
 
-`dev.ps1` kerakli `PATH`, `JAVA_HOME` va `ANDROID_HOME` qiymatlarini joriy terminal uchun o'zi tayyorlaydi. Windows foydalanuvchisi muhitiga ham yo'llar qo'shilgan. Yangi sozlamalarni oddiy terminal va VS Code ko'rishi uchun ularni qayta ochish mumkin.
+`dev.ps1` kerakli `PATH`, `JAVA_HOME` va `ANDROID_HOME` qiymatlarini joriy terminal uchun tayyorlaydi. Foydalanuvchi muhitidagi yangi yo'llarni ko'rish uchun VS Code va terminalni qayta oching.
 
-Yangi Windows kompyuterida Git va VS Code o'rnatilgach, vositalarning aniq versiyalarini `toolchain.windows.json` dan olib o'rnatish mumkin:
+Yangi Windows kompyuterida Git va VS Code o'rnatilgach, `app` ichida:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup-windows.ps1
 ```
 
-Skript JDK/Android arxivlarining SHA-256 summalarini va Flutter Git commitini tekshiradi. Android SDK paketlari o'rnatiladi va `Avto_API_36` virtual qurilmasi yaratiladi. Vositalar avval o'rnatilgan bo'lsa, ulardan qayta foydalanadi.
+Skript `toolchain.windows.json` dagi versiyalarni o'rnatadi, JDK/Android arxivlarining SHA-256 summalarini va Flutter Git commitini tekshiradi. Android SDK paketlari va `Avto_API_36` virtual qurilmasini tayyorlaydi. Mavjud vositalardan qayta foydalanadi.
 
-## Ishga tushirish
+## Android ilovasini ishga tushirish
 
-`app` papkasida PowerShell orqali:
+VS Code'da ushbu loyiha papkasini yoki umumiy `Avto.code-workspace` ni oching. Avval `App: Android emulator` vazifasini ishga tushiring. Android ochilgach, `Avto: Android + server backend` konfiguratsiyasini tanlab `F5` bosing. Ilova emulator ichiga o'rnatiladi va Flutter debugger ulanadi. Ishga tushirish vazifalari `.vscode/tasks.json` bilan repozitoriyda saqlanadi.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\dev.ps1 web
-```
-
-Chrome preview va serverdagi backend ishlatiladi. Manzil: `http://127.0.0.1:8085`. VS Code'da `Avto.code-workspace` ni oching va `Avto: Chrome + server backend` konfiguratsiyasi bilan `F5` bosing.
-
-Android emulator va ilova:
+PowerShell orqali `app` papkasidan:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\dev.ps1 emulator
@@ -40,9 +34,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\dev.ps1 devices
 powershell -NoProfile -ExecutionPolicy Bypass -File .\dev.ps1 android -Device emulator-5554
 ```
 
-AVD nomi `Avto_API_36`. Bu AOSP simulatori; Google Play xizmatlari yo'q. FCM yoki Google Maps ulanadigan bosqichda Google APIs tizim rasmi bilan ham alohida sinov kerak bo'ladi. `emulator-5554` o'rniga `devices` buyrug'i ko'rsatgan identifikator ishlatiladi.
+`emulator-5554` o'rniga `devices` ko'rsatgan identifikatorni ishlating. USB debugging yoqilgan haqiqiy Android telefon ham qurilmalar ro'yxatida ko'rinadi.
 
-Emulator 720×1560 ekran va 2.5 GB RAM bilan sozlangan. Birinchi yuklanish ushbu kompyuterda bir necha daqiqa olishi mumkin; Android to'liq ochilgach ilovani ishga tushiring. Dastlab ulanish xatosi ko'rinsa, `Qayta urinish` tugmasini bosing.
+`Avto_API_36` AOSP emulatori 720×1560 ekran va 2.5 GB RAM bilan sozlangan. Birinchi yuklanish bir necha daqiqa olishi mumkin. Google Play xizmatlari kerak bo'ladigan funksiyalar uchun keyinchalik Google APIs tizim rasmi bilan ham sinov o'tkaziladi.
 
 ## Tekshirish va APK
 
@@ -53,39 +47,41 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\dev.ps1 backend
 powershell -NoProfile -ExecutionPolicy Bypass -File .\dev.ps1 apk
 ```
 
-APK: `build/app/outputs/flutter-apk/app-debug.apk`. Bu ishlab chiqish uchun debug APK. Testlar serverga ma'lumot yozmaydi; unit/widget testlar soxta HTTP transportidan foydalanadi. `backend` buyrug'i esa haqiqiy serverga faqat o'qish so'rovlarini yuboradi.
+APK: `build/app/outputs/flutter-apk/app-debug.apk`. Bu ishlab chiqish uchun debug APK. Unit/widget testlar soxta HTTP transportidan foydalanadi. `backend` buyrug'i haqiqiy serverga faqat o'qish so'rovlarini yuboradi.
 
 ## Backend tanlash
 
 Standart API: `https://platform.buxoroavto.uz/api/v1`.
 
 - `config/production.json` — serverdagi backend.
-- `config/local-web.json` — Chrome uchun `http://127.0.0.1:8001/api/v1`.
 - `config/local-android.json` — Android emulatori uchun `http://10.0.2.2:8001/api/v1`.
 
-Masalan, lokal Laravel serveri `8001` portda ishlayotganda:
+Lokal Laravel serveri `8001` portda ishlayotganda:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\dev.ps1 android -Device emulator-5554 -ApiBaseUrl http://10.0.2.2:8001/api/v1
 ```
 
-Flutter qurilmalari Laravel bazasiga to'g'ridan-to'g'ri ulanmaydi; barcha so'rovlar API orqali o'tadi. Bu JSON fayllarida faqat ochiq konfiguratsiya saqlanadi. SSH, baza va boshqa maxfiy kalitlar ilovaga kiritilmaydi.
+Backend manzili ilova ichida veb sahifa ochish uchun ishlatilmaydi. API ma'lumotlarni JSON ko'rinishida beradi, interfeysni Flutter chizadi. Ilova bazaga bevosita ulanmaydi. SSH, baza parollari va boshqa maxfiy kalitlar ilovaga kiritilmaydi.
 
 ## iOS
 
-`ios/` loyihasi va `codemagic.yaml` tayyorlandi. Windows'da iOS native build bajarilmaydi; bulutdagi macOS workflow ishlatiladi. Codemagic akkaunti hali ulanmagan, shu sababli haqiqiy iOS build va simulator sinovi bajarilmadi. To'liq tartib: [docs/ios-cloud.md](docs/ios-cloud.md).
+`ios/` loyihasi va `codemagic.yaml` tayyor. Kod Windows'da yoziladi; iOS build va simulator uchun macOS/Xcode muhiti kerak. Bu mahalliy Mac yoki bulutdagi macOS mashinasi bo'lishi mumkin.
 
-## Bajarilgan tekshiruvlar
+Codemagic akkaunti hali ulanmagan, shu sababli haqiqiy iOS build va simulator sinovi bajarilmadi. Tartib: [docs/ios-cloud.md](docs/ios-cloud.md).
 
-2026-11-25 kuni Windows'da `flutter doctor` muammosiz, `flutter analyze` xatosiz va 4 ta unit/widget test muvaffaqiyatli o'tdi. Chrome desktop/mobil o'lchamlarda serverdagi e'lonlar, rasmlar va kategoriya filtri tekshirildi. Android debug APK yig'ildi, `Avto_API_36` emulatoriga o'rnatildi; haqiqiy backenddagi e'lonlar, rasmlar va kategoriya filtri tekshirildi. Serverga SSH orqali ulanish hamda API holati faqat o'qish amallari bilan tekshirildi.
+## Avval bajarilgan tekshiruvlar
+
+2026-11-25 kuni Windows'da `flutter doctor`, `flutter analyze` va 4 ta unit/widget test muvaffaqiyatli o'tdi. Android debug APK yig'ilib, `Avto_API_36` emulatoriga o'rnatildi; haqiqiy backenddagi e'lonlar, rasmlar va kategoriya filtri tekshirildi. Serverga SSH ulanishi va API holati faqat o'qish amallari bilan tekshirildi. Bu natijalar o'sha paytdagi kodga tegishli; keyingi o'zgarishlardan so'ng `dev.ps1 check` va Android sinovini qayta bajaring.
 
 ## Tuzilma
 
-- `lib/main.dart` — boshlang'ich marketplace interfeysi.
+- `lib/main.dart` — Flutter marketplace ekranlari.
 - `lib/marketplace_api.dart` — umumiy API mijozi va javob modellari.
-- `test/marketplace_test.dart` — API shartnomasi va ekran holatlari.
-- `dev.ps1`, `scripts/` — Windows ishga tushirish va tekshirish buyruqlari.
-- `.vscode/` — VS Code uchun SDK, debug va kengaytma sozlamalari.
+- `test/marketplace_test.dart` — API va ekran holatlari testlari.
+- `android/`, `ios/` — mobil platforma loyihalari.
+- `dev.ps1`, `scripts/` — Windows muhitini sozlash va ishga tushirish buyruqlari.
+- `.vscode/` — SDK, Android debug va kengaytma sozlamalari.
 - `codemagic.yaml` — Android tekshiruvlari va unsigned iOS simulator build.
 
-Flutter sozlash manbalari: [Windows/VS Code](https://docs.flutter.dev/install/with-vs-code), [Android](https://docs.flutter.dev/platform-integration/android/setup), [iOS](https://docs.flutter.dev/platform-integration/ios/setup).
+Manbalar: [Flutter Android sozlash](https://docs.flutter.dev/platform-integration/android/setup), [Flutter iOS sozlash](https://docs.flutter.dev/platform-integration/ios/setup).
